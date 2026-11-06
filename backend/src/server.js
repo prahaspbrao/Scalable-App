@@ -4,6 +4,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import authRoutes from "./routes/auth.routes.js";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(
 // Request parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/api/v1/auth", authRoutes);
 
 // HTTP request logging
 app.use(morgan("dev"));
