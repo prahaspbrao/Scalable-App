@@ -1,5 +1,8 @@
-import { registerUser } from "../services/auth.service.js";
-import { loginUser } from "../services/auth.service.js";
+import {
+    registerUser,
+    loginUser,
+    getCurrentUser,
+} from "../services/auth.service.js";
 
 export const register = async (req, res) => {
   try {
@@ -93,3 +96,32 @@ export const login = async (req, res) => {
         });
     }
 };
+
+
+export const me = async (req, res) => {
+    try {
+        const user = await getCurrentUser(req.user.id);
+
+        return res.status(200).json({
+            success: true,
+            message: "User profile retrieved successfully",
+            data: user,
+        });
+
+    } catch (error) {
+        if (error.message === "USER_NOT_FOUND") {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+
+        console.error("Get current user error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
+
