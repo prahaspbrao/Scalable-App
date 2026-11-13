@@ -10,8 +10,12 @@ dotenv.config();
 
 const app = express();
 
+// Request parsing
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Security middleware
-    app.use(helmet());
+app.use(helmet());
 
 // CORS configuration
 app.use(
@@ -20,11 +24,6 @@ app.use(
         credentials: true,
     })
 );
-
-// Request parsing
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use("/api/v1/auth", authRoutes);
 
 // HTTP request logging
 app.use(morgan("dev"));
@@ -38,10 +37,12 @@ app.get("/api/v1/health", (req, res) => {
     });
 });
 
+// Authentication routes
+app.use("/api/v1/auth", authRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(` API running on port ${PORT}`);
+    console.log(`API running on port ${PORT}`);
 });

@@ -46,3 +46,53 @@ export const registerUser = async ({ name, email, password, phone }) => {
 
   return { user, token };
 };
+
+
+export const loginUser = async ({ email, password }) => {
+  // 1. Find user by email
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!user) {
+    throw new Error("INVALID_CREDENTIALS");
+  }
+
+  // 2. Check whether account is active
+  if (!user.isActive) {
+    throw new Error("ACCOUNT_INACTIVE");
+  }
+
+  // 3. Compare entered password with hashed password
+  const isPasswordValid = await bcrypt.compare(
+    password,
+    user.password
+  );
+
+  if (!isPasswordValid) {
+    throw new Error("INVALID_CREDENTIALS");
+  }
+
+  // 4. Generate JWT token
+  const token = jwt.sign(
+    {
+      sub: user.id,
+      role: user.role,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN || "1d",
+    }
+  );
+
+  // 5. Return safe user information and token
+  return {
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+    token,
+  };
+};
