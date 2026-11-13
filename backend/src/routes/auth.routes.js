@@ -1,13 +1,8 @@
-
 import express from "express";
 
-import {
-    register,
-    login,
-    me,
-} from "../controllers/auth.controller.js";
+import { register, login, me } from "../controllers/auth.controller.js";
 
-import { protect } from "../middleware/auth.middleware.js";
+import { protect, authorize } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
@@ -17,5 +12,13 @@ router.post("/login", login);
 
 // Protected routes
 router.get("/me", protect, me);
+
+router.get("/admin-test", protect, authorize("ADMIN"), (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Welcome, Admin! Access granted.",
+    user: req.user,
+  });
+});
 
 export default router;
