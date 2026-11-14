@@ -5,6 +5,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes.js";
+import categoryRoutes from "./routes/category.routes.js";
 
 dotenv.config();
 
@@ -39,6 +40,9 @@ app.get("/api/v1/health", (req, res) => {
 
 // Authentication routes
 app.use("/api/v1/auth", authRoutes);
+
+// Categories routes
+app.use("/api/v1/categories", categoryRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;
