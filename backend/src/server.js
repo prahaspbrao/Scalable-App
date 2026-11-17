@@ -6,6 +6,7 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
+import productRoutes from "./routes/product.routes.js";
 
 dotenv.config();
 
@@ -43,6 +44,7 @@ app.use("/api/v1/auth", authRoutes);
 
 // Categories routes
 app.use("/api/v1/categories", categoryRoutes);
+app.use("/api/v1/products", productRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;
