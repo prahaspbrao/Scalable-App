@@ -358,3 +358,24 @@ export const updateProduct = async (productId, updateData) => {
     throw error;
   }
 };
+
+export const archiveProduct = async (productId) => {
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
+  });
+
+  if (!product) {
+    throw new Error("PRODUCT_NOT_FOUND");
+  }
+
+  if (product.status === "ARCHIVED") {
+    throw new Error("PRODUCT_ALREADY_ARCHIVED");
+  }
+
+return prisma.product.update({
+    where: { id: productId },
+    data: {
+      status: "ARCHIVED",
+    },
+  });
+};

@@ -2,6 +2,7 @@
 import express from "express";
 
 import {
+  archiveProductController,
   createProductController,
   getAllProductsController,
   getProductByIdController,
@@ -38,6 +39,13 @@ router.post(
   protect,
   authorize("ADMIN"),
   createProductController
+);
+
+router.delete(
+  "/:id",
+  protect,
+  authorize("ADMIN"),
+  archiveProductController
 );
 
 export default router;

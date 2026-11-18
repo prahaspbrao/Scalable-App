@@ -1,4 +1,5 @@
 import {
+  archiveProduct,
   createProduct,
   getAllProducts,
   getProductById,
@@ -519,3 +520,38 @@ export const updateProductController = async (req, res) => {
   }
 };
 
+export const archiveProductController = async (req, res) => {
+  try {
+    const product = await archiveProduct(req.params.id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Product archived successfully",
+      data: product,
+    });
+  } catch (error) {
+    if (error.message === "PRODUCT_NOT_FOUND") {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    if (error.message === "PRODUCT_ALREADY_ARCHIVED") {
+      return res.status(409).json({
+        success: false,
+        message: "Product is already archived",
+      });
+    }
+
+    console.error("Archive product error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+
+    
